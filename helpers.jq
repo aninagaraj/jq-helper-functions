@@ -149,3 +149,36 @@ def deep_flatten:
   if type == "array" then map(deep_flatten) | add
   else [.]
   end;
+
+# Convert seconds to H:M:S format
+# Usage: 3665 | seconds_to_hms  # returns "1:01:05"
+# Handles both integer and float seconds
+def to_hms:
+  . as $s |
+  if $s == null then null
+  else
+    ($s / 3600 | floor) as $hours |
+    (($s % 3600) / 60 | floor) as $minutes |
+    ($s % 60) as $seconds |
+    if $hours > 0 then
+      "\($hours):\($minutes | tostring | "0"*(2 - ($minutes | tostring | length)) + ($minutes | tostring)):\($seconds | tostring | split(".")[0] | "0"*(2 - length) + .)"
+    else
+      "\($minutes):\($seconds | tostring | split(".")[0] | "0"*(2 - length) + .)"
+    end
+  end;
+
+# Convert seconds to human readable format with units
+# Usage: 3665 | seconds_to_readable  # returns "1 hour, 1 minute, 5 seconds"
+def to_hms_readable:
+  . as $s |
+  if $s == null then null
+  else
+    ($s / 3600 | floor) as $hours |
+    (($s % 3600) / 60 | floor) as $minutes |
+    ($s % 60 | floor) as $seconds |
+    [
+      if $hours > 0 then "\($hours) hour" + (if $hours > 1 then "s" else "" end) else empty end,
+      if $minutes > 0 then "\($minutes) minute" + (if $minutes > 1 then "s" else "" end) else empty end,
+      if $seconds > 0 then "\($seconds) second" + (if $seconds > 1 then "s" else "" end) else empty end
+    ] | join(", ")
+  end;
