@@ -26,9 +26,9 @@ def round_to(places):
 ## FLOAT FUNCTIONS ##
 
 # Convert number using binary prefixes (powers of 1024)
-# Usage: number | convert_units("k")  # converts to kibibytes
+# Usage: number | to_units("k")  # converts to kibibytes
 # Supported units: k (kibi), m (mebi), g (gibi), t (tebi), p (pebi)
-def convert_units(unit):
+def to_units(unit):
   . as $value |
   {
     "k": pow(1024;1),
@@ -151,7 +151,7 @@ def deep_flatten:
   end;
 
 # Convert seconds to H:M:S format
-# Usage: 3665 | seconds_to_hms  # returns "1:01:05"
+# Usage: 3665 | to_hms  # returns "1:01:05"
 # Handles both integer and float seconds
 def to_hms:
   . as $s |
@@ -168,7 +168,7 @@ def to_hms:
   end;
 
 # Convert seconds to human readable format with units
-# Usage: 3665 | seconds_to_readable  # returns "1 hour, 1 minute, 5 seconds"
+# Usage: 3665 | to_hms_readable  # returns "1 hour, 1 minute, 5 seconds"
 def to_hms_readable:
   . as $s |
   if $s == null then null
